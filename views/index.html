@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" name="input" id="inp" />
+    <button onclick="getLocation()">Try It</button>
+    <h1 id="x"></h1>
+
+    <script>
+      const backendApi = "http://localhost:3001";
+      async function getLocation() {
+        let obj = {
+          name: "Smart+",
+          adress: "Чиланзар-5, Ташкент, Узбекистан",
+          contact: "+998945154466",
+          link: "@notinok",
+          lat: 61.25848892,
+          long: 40.25848892,
+          type_id: 2.6,
+        };
+
+        let formData = new FormData();
+        if (inp.files.length) {
+          formData.append("file", inp.files[0]);
+          formData.append("adress", obj.adress);
+          formData.append("name", obj.name);
+          formData.append("contact", obj.contact);
+          formData.append("link", obj.link);
+          formData.append("type_id", obj.type_id);
+          formData.append("lat", obj.lat);
+          formData.append("long", obj.long);
+        }
+        let res = await request("/shop", "POST", formData);
+        console.log(res);
+      }
+
+      async function request(route, method, body) {
+        let headers = {
+          token: window.localStorage.getItem("token"),
+        };
+
+        if (!(body instanceof FormData)) {
+          headers["Content-Type"] = "application/json";
+        }
+
+        let response = await fetch(backendApi + route, {
+          method,
+          headers,
+          body: body instanceof FormData ? body : JSON.stringify(body),
+        });
+
+        if (!(response.status === 200 || response.status === 201)) {
+          response = await response.json();
+          throw new Error(response.message);
+        }
+        return await response.json();
+      }
+    </script>
+  </body>
+</html>

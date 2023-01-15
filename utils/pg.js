@@ -8,16 +8,31 @@ const pool = new pg.Pool({
   password: process.env.PG_PASS,
 });
 
-async function fetch(query, ...params) {
+async function fetchAll(query, ...params) {
+  const client = await pool.connect();
   try {
-    const client = new pool();
     const { rows } = await client.query(query, params.length ? params : null);
     return rows;
   } catch (err) {
-    return err.message;
+    return err;
   } finally {
     console.log("finally");
+    client.release();
+  }
+}
+async function fetch(query, ...params) {
+  const client = await pool.connect();
+  try {
+    const {
+      rows: [data],
+    } = await client.query(query, params.length ? params : null);
+    return data;
+  } catch (err) {
+    return err;
+  } finally {
+    console.log("finally");
+    client.release();
   }
 }
 
-export { fetch };
+export { fetch, fetchAll };
