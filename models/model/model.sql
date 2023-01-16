@@ -110,22 +110,26 @@ CREATE TABLE shopping (
     type_id int REFERENCES types(id),
     loc_lat smallint NOT NULL,
     loc_long smallint NOT NULL,
-    litsense VARCHAR(32)
+    litsense VARCHAR(32),
+    admin_id BIGINT  NULL
 );
 
 ALTER TABLE shopping ALTER COLUMN loc_lat TYPE bigint NOT NULL; 
+ALTER TABLE shopping ALTER COLUMN loc_long TYPE bigint NOT NULL; 
+ALTER TABLE shopping ADD COLUMN admin_id bigint NULL REFERENCES users(id) ON DELETE CASCADE;    
+
 
 INSERT INTO shopping (name,adress,image,contact,link,type_id,loc_lat,loc_long,litsense) VALUES 
-('VIP BRAND','Toshkent, Samarqand Darvoza','/image/vip_brand/vip_brand.jpg', '+998977001213', '@vip_brand.uz', 1,123.1,252.12 ,'AS1234511'),
-('Texnomart*','Toshkent, Chilonzor 2','/image/texnomart/texnomart.jpg', '+998977001214', '@texnomart.uz', 2,121.1,152.12 ,'AS1234512'),
-('Korzinka','Toshkent, Chilonzor 20','/image/korzinka/korzinka.jpg', '+998977001215', '@korzinka.uz',4,123.1,252.12 ,'AS1234513'),
-('Ultrashop','Toshkent, Shoyhontohur','/image/ultrashop/ultrashop.jpg', '+998977001216', '@ultrashop.uz', 2, 123.1,252.12 ,'AS1234514'),
-('VIP BRAND','Toshkent, Shoyhontohur','/image/vip_brand/vip_brand1.jpg', '+998977001212', '@vip_brand.uz', 3, 123.1,252.12 ,'AS1234515'),
-('Dish Chine','Toshkent, Chilonzor 22','/image/dish_chine/dish_chine.jpg', '+998977001217', '@dish_chine.uz', 5,123.1,252.12 ,'AS1234516'),
-('Stroy Mart','Toshkent, Sergeli 5','/image/stroy_mart/stroy_mart.jpg', '+998977001218', '@stroy_mart.uz', 6,123.1,252.12 ,'AS1234517'),
-('Paris','Toshkent, Yunusobot 1','/image/paris/paris.jpg', '+998977001219',  '@paris.uz',7,123.1,252.12 ,'AS1234518'),
-('Qamar','Toshkent, Shoyhontohur 2','/image/qamar/qamar.jpg', '+998977001210',  '@qamar.uz',8,123.1,252.12 ,'AS1234519'),
-('Olimpic','Toshkent, Chilonzor 24','/image/olimpic/olimpic.jpg', '+998977001211', '@olimpic.uz', 9,123.1,252.12 ,'AS1234510');
+('VIP BRAND','Toshkent, Samarqand Darvoza','/image/vip_brand/vip_brand.jpg', '+998977001213', '@vip_brand.uz', 1, 123.1, 252.12 ,'AS1234511'),
+('Texnomart*','Toshkent, Chilonzor 2','/image/texnomart/texnomart.jpg', '+998977001214', '@texnomart.uz', 2, 121.1, 152.12 ,'AS1234512'),
+('Korzinka','Toshkent, Chilonzor 20','/image/korzinka/korzinka.jpg', '+998977001215', '@korzinka.uz',4, 123.1, 252.12 ,'AS1234513'),
+('Ultrashop','Toshkent, Shoyhontohur','/image/ultrashop/ultrashop.jpg', '+998977001216', '@ultrashop.uz', 2, 123.1, 252.12 ,'AS1234514'),
+('VIP BRAND','Toshkent, Shoyhontohur','/image/vip_brand/vip_brand1.jpg', '+998977001212', '@vip_brand.uz', 3, 123.1, 252.12 ,'AS1234515'),
+('Dish Chine','Toshkent, Chilonzor 22','/image/dish_chine/dish_chine.jpg', '+998977001217', '@dish_chine.uz', 5, 123.1, 252.12 ,'AS1234516'),
+('Stroy Mart','Toshkent, Sergeli 5','/image/stroy_mart/stroy_mart.jpg', '+998977001218', '@stroy_mart.uz', 6, 123.1, 252.12 ,'AS1234517'),
+('Paris','Toshkent, Yunusobot 1','/image/paris/paris.jpg', '+998977001219',  '@paris.uz', 7, 123.1, 252.12 ,'AS1234518'),
+('Qamar','Toshkent, Shoyhontohur 2','/image/qamar/qamar.jpg', '+998977001210',  '@qamar.uz', 8, 123.1, 252.12 ,'AS1234519'),
+('Olimpic','Toshkent, Chilonzor 24','/image/olimpic/olimpic.jpg', '+998977001211', '@olimpic.uz', 9 , 123.1, 252.12 ,'AS1234510');
 
 
 CREATE TABLE cotegories (
