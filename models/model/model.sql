@@ -265,8 +265,9 @@ CREATE TABLE users (
     link VARCHAR(64),
     password VARCHAR(64) NOT NULL,
     image VARCHAR(512) NOT NULL,
-    role_id int REFERENCES roles(id)
+    role_id int REFERENCES roles(id) --DEFAULT 2
 );
+-- ALTER TABLE users ALTER COLUMN role_id TYPE int REFERENCES roles(id) DEFAULT 2; 
 
 INSERT INTO users (username, contact, link, password, image, role_id ) VALUES
 ('Admin', '+998944444444', '@admin', '038f270ca678c66f5bf393f958e8eebcf98b049e5a0d32a69cabf46b576cabbf','/image/users/admin.jpg',1), 

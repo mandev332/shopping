@@ -7,15 +7,15 @@ import { fetch } from "../utils/pg.js";
 const user = {
   LOGIN: async (req, res, next) => {
     let { token } = req.headers;
-    if (jwt.VERIFY(token) instanceof Error)
+    if (jwt.VERIFY(token) instanceof Error) {
       res.send({
         status: 401,
         data: null,
         message: "You unauthorization!",
         link: "/register",
       });
-    else {
-      req.user = { id: jwt.VERIFY(token).token.id };
+    } else {
+      req.user = { id: jwt.VERIFY(token).token };
       return next();
     }
   },
@@ -47,16 +47,23 @@ const user = {
     }
   },
   UPLOAD: async (req, res, next) => {
-    const { file } = req.files;
-    if (req.user?.id) {
-      let user = await fetch(user_models.GET, req.user.id);
-      fs.unlinkSync(path.join(process.cwd(), user.image));
+    try {
+      const { file } = req.files;
+      if (req.user?.id) {
+        let user = await fetch(user_models.GET, req.user.id);
+        fs.unlinkSync(path.join(process.cwd(), user.image));
+      }
+      let filePath = path.join(process.cwd(), "image", "users", file.name);
+      req.body.image = "/image/users/" + file.name;
+      file.mv(filePath);
+      return next();
+    } catch (err) {
+      res.send({
+        status: 410,
+        data: null,
+        message: err.message,
+      });
     }
-    let filePath = path.join(process.cwd(), "image", "users", file.name);
-    req.body.image = "/image/users/" + file.name;
-    file.mv(filePath);
-    return next();
   },
 };
-
 export { user };

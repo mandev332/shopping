@@ -1,29 +1,21 @@
 import sha256 from "sha256";
 import { user_models } from "../models/user.model.js";
 import { jwt } from "../utils/JWT.js";
-import { fetch, fetchAll } from "../utils/pg.js";
+import { fetch } from "../utils/pg.js";
 
 const user_contr = {
   GET: async (req, res) => {
     try {
-      const { id } = req.params;
-      if (!isNaN(+id)) {
-        let data = await fetch(user_models.GET, id);
-        if (data?.id) {
-          res.send({
-            status: 200,
-            data,
-            message: "user",
-          });
-        } else throw new Error(id + " - user not found!");
-      } else {
-        let data = await fetchAll(user_models.GETALL);
+      const { id } = req.user;
+      let data = await fetch(user_models.GET, id);
+      if (data?.id) {
+        delete data.password;
         res.send({
           status: 200,
           data,
-          message: "users",
+          message: "user",
         });
-      }
+      } else throw new Error(id + " - user not found!");
     } catch (err) {
       res.send({
         status: 404,
@@ -45,7 +37,7 @@ const user_contr = {
           sha256(password),
           role_id
         );
-        console.log(addUser);
+        if (addUser instanceof Error) throw new Error(addUser.message);
         res.send({
           status: 200,
           data: jwt.SIGN({ token: addUser.id }),
@@ -100,7 +92,27 @@ const user_contr = {
       });
     }
   },
-  DELETE: async (req, res) => {},
+  DELETE: async (req, res) => {
+    try {
+      const { id } = req.user;
+      if (!isNaN(+id)) {
+        let data = await fetch(user_models.GET, id);
+        if (!data?.id) throw new Error(id + " - user not found!");
+        let user = await fetch(user_models.DELETE, id);
+        res.send({
+          status: 200,
+          data: null,
+          message: "Succsefully deleted user - " + user.id + "!",
+        });
+      }
+    } catch (err) {
+      res.send({
+        status: 400,
+        data: null,
+        message: err.message,
+      });
+    }
+  },
 };
 
 export { user_contr };
